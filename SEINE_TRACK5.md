@@ -88,11 +88,21 @@ pretrained/
 
 ## Step 0b — Download the dataset
 
-The **test** set is a single pre-staged `.zip` (`<sample>/input/%d.png + caption.json`):
+The **test** set is a single pre-staged `.zip` (`<sample>/input/%d.png + caption.json`).
+It is access-controlled (not a public link), so anonymous `gdown` fails — download it
+with your authenticated Google account via the Drive API:
 
-```bash
-!pip install -q gdown
-!gdown 1TJcgXk7RRkHB7JjN7uWVHuTKLgzmtfhq -O /content/data/wts_test.zip
+```python
+import os, io
+os.makedirs('/content/data', exist_ok=True)
+from google.colab import auth; auth.authenticate_user()   # OAuth popup -> approve
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload
+svc = build('drive', 'v3')
+req = svc.files().get_media(fileId='1TJcgXk7RRkHB7JjN7uWVHuTKLgzmtfhq')
+with io.FileIO('/content/data/wts_test.zip', 'wb') as fh:
+    dl = MediaIoBaseDownload(fh, req, chunksize=50*1024*1024); done = False
+    while not done: _, done = dl.next_chunk()
 !unzip -q -o /content/data/wts_test.zip -d /content/data/test
 ```
 
