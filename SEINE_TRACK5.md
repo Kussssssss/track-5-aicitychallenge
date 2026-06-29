@@ -86,6 +86,29 @@ pretrained/
 └── stable-diffusion-v1-4/{vae, unet, text_encoder, tokenizer, ...}
 ```
 
+## Step 0b — Download the dataset
+
+The **test** set is a single pre-staged `.zip` (`<sample>/input/%d.png + caption.json`):
+
+```bash
+!pip install -q gdown
+!gdown 1TJcgXk7RRkHB7JjN7uWVHuTKLgzmtfhq -O /content/data/wts_test.zip
+!unzip -q -o /content/data/wts_test.zip -d /content/data/test
+```
+
+Use `/content/data/test` as `data_root` — `build_index.py`/`inspect_dataset.py` scan
+for `input/` recursively, so a wrapper folder inside the zip is fine.
+
+The **train/val** set is *raw video* (`videos/`, `annotations/`, `external/BDD_PC_5K/`)
+and must be staged into `<sample>/input/*.png` + GT with
+`wts-dataset-tv2v/script/data_sample.py` before `eval/eval_metrics.py` can score it —
+not needed for the test-submission path.
+
+```bash
+# optional, large:
+# !gdown --folder 1d7PHfIOcE9UClirWKbsoZKWK8ceDpjKU -O /content/data/wts_trainval
+```
+
 ## Step 1 — Inspect the real test layout (IMPORTANT)
 
 The index builder assumes `caption.json` sits **next to** an `input/` folder.
