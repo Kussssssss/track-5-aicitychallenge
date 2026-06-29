@@ -1,0 +1,26 @@
+# weights / model files (downloaded on Colab)
+pretrained/
+*.pt
+*.ckpt
+*.safetensors
+
+# generated predictions & results
+outputs/
+results/
+
+# third-party code (cloned separately on Colab)
+third_party/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# archives / large binaries
+*.zip
+
+# os / editor
+.DS_Store
+.vscode/
+.idea/

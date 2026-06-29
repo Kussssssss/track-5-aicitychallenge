@@ -1,0 +1,5 @@
+# Offline metric dependencies for eval/eval_metrics.py (install on Colab).
+scikit-image
+lpips
+open_clip_torch
+cd-fvd

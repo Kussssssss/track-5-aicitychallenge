@@ -1,0 +1,18 @@
+data_root: /path/to/wts_track5_tv2v_test
+split: test
+index_output: data/index_test.jsonl
+
+# Use this only if a package is missing "frame length" in caption.json.
+default_future_len:
+
+# "name" matches the official submission convention where each sample folder
+# name becomes the output folder name. Use "relative" if duplicate names exist.
+sample_id_mode: name
+
+phase_map:
+  "0": pre-recognition
+  "1": recognition
+  "2": judgment
+  "3": action
+  "4": avoidance
+
