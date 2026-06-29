@@ -45,9 +45,16 @@ drive.mount('/content/drive')
 # tokenizers installs from a prebuilt wheel. Do NOT pin transformers==4.29.2 -- it
 # drags in an old tokenizers that must build from Rust and fails on Colab py3.12.
 !pip install -q "huggingface_hub==0.25.2" "diffusers==0.15.0" "transformers==4.41.2"
+# diffusers 0.15 imports flax modules (using the removed jax.random.KeyArray) when
+# jax+flax are present; we don't use flax, so remove it to skip that import path.
+!pip uninstall -y flax
 # Colab already ships a recent torch/torchvision; only install xformers if the
 # wheel matches the torch build, otherwise set enable_xformers... : False in the config.
 ```
+
+> If you already triggered the `jax.random.KeyArray` error, **Runtime > Restart
+> session** after uninstalling flax (the failed import leaves diffusers half-loaded
+> in the kernel), then re-run from the import check.
 
 Quick import sanity check before the long run:
 
