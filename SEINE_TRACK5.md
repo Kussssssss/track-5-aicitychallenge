@@ -40,10 +40,23 @@ drive.mount('/content/drive')
 !git clone https://github.com/Vchitect/SEINE third_party/SEINE
 
 %cd /content/aicity_track5
-!pip install -q omegaconf einops natsort decord imageio timm \
-    rotary-embedding-torch==0.3.5 "diffusers==0.15.0" "transformers==4.29.2" Pillow
+!pip install -q omegaconf einops natsort decord imageio timm rotary-embedding-torch Pillow
+# Keep diffusers pinned (SEINE uses its ~0.15 APIs); use a recent transformers so
+# tokenizers installs from a prebuilt wheel. Do NOT pin transformers==4.29.2 -- it
+# drags in an old tokenizers that must build from Rust and fails on Colab py3.12.
+!pip install -q "huggingface_hub==0.25.2" "diffusers==0.15.0" "transformers==4.41.2"
 # Colab already ships a recent torch/torchvision; only install xformers if the
 # wheel matches the torch build, otherwise set enable_xformers... : False in the config.
+```
+
+Quick import sanity check before the long run:
+
+```python
+import diffusers, transformers
+from diffusers.models.attention import FeedForward, AdaLayerNorm
+from diffusers.utils import WEIGHTS_NAME
+from transformers import CLIPTokenizer, CLIPTextModel
+print(diffusers.__version__, transformers.__version__, "OK")
 ```
 
 ### Download weights into pretrained/
