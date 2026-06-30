@@ -21,7 +21,8 @@ enable_xformers_memory_efficient_attention: True
 
 # ---- sampling ----
 seed: 0
-cfg_scale: 8.0
+cfg_scale: 5.0          # lower = appearance stays closer to the conditioning frame
+                        # (less text-driven drift over long rollouts). Try 3-5.
 sample_method: "ddim"          # 'ddim' is ~5x faster than 'ddpm' at similar quality
 num_sampling_steps: 50         # ddim 50 steps (vs ddpm 250). Drop to 25-30 for more speed.
 do_classifier_free_guidance: True
@@ -33,6 +34,6 @@ use_mask: True
 # Number of history frames used as the conditioning prefix per clip.
 # 1 == classic SEINE I2V (animate from the single last history frame); a small
 # K maximizes generated frames per clip and minimizes autoregressive drift.
-cond_frames: 1
+cond_frames: 2
 # Overlap frames carried into the next autoregressive window (the last
 # `cond_frames` generated frames re-condition the next clip).
