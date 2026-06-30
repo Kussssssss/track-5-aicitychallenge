@@ -24,7 +24,8 @@ seed: 0
 cfg_scale: 5.0          # lower = appearance stays closer to the conditioning frame
                         # (less text-driven drift over long rollouts). Try 3-5.
 sample_method: "ddim"          # 'ddim' is ~5x faster than 'ddpm' at similar quality
-num_sampling_steps: 50         # ddim 50 steps (vs ddpm 250). Drop to 25-30 for more speed.
+num_sampling_steps: 30         # ddim 30: fast draft for a first valid submission.
+                               # Bump to 50-100 later when optimizing quality.
 do_classifier_free_guidance: True
 negative_prompt: ""
 additional_prompt: ", static fixed traffic surveillance camera, realistic, high detail."
