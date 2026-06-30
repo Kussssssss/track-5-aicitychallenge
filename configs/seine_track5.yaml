@@ -10,10 +10,10 @@ pretrained_model_path: "pretrained/stable-diffusion-v1-4/"
 model: UNet
 num_frames: 16          # SEINE clip length (fixed by the checkpoint)
 # Generation resolution (h, w), multiples of 8. Output is resized back to each
-# sample's native input resolution afterwards, so this only sets the model's
-# working canvas. [320, 512] is a well-tested SEINE size; [288, 512] matches
-# 16:9 (1280x720) more closely -- A/B test both on the val split.
-image_size: [320, 512]
+# sample's native 1280x720 afterwards, so this only sets the model's working
+# canvas. [288, 512] matches 16:9 exactly (1280/720 = 288/512 = 1.778) -> least
+# distortion on upscale. [320, 512] is the other well-tested SEINE size.
+image_size: [288, 512]
 
 # ---- speed ----
 use_fp16: True
@@ -22,8 +22,8 @@ enable_xformers_memory_efficient_attention: True
 # ---- sampling ----
 seed: 0
 cfg_scale: 8.0
-sample_method: "ddpm"          # 'ddpm' or 'ddim'
-num_sampling_steps: 250        # 250 for ddpm; try 50-100 for ddim to go faster
+sample_method: "ddim"          # 'ddim' is ~5x faster than 'ddpm' at similar quality
+num_sampling_steps: 50         # ddim 50 steps (vs ddpm 250). Drop to 25-30 for more speed.
 do_classifier_free_guidance: True
 negative_prompt: ""
 additional_prompt: ", static fixed traffic surveillance camera, realistic, high detail."
