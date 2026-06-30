@@ -47,6 +47,8 @@ def load_frame_uint8(path):
 # --------------------------------------------------------------------------- #
 def import_seine(seine_root):
     """Make the SEINE package importable and return the symbols we need."""
+    import importlib.util
+
     seine_root = str(Path(seine_root).resolve())
     if seine_root not in sys.path:
         sys.path.insert(0, seine_root)
@@ -54,7 +56,14 @@ def import_seine(seine_root):
     from einops import rearrange
     from torchvision import transforms
 
-    from datasets import video_transforms
+    # SEINE's `datasets/` package name collides with the installed HuggingFace
+    # `datasets` package, which shadows it. Load video_transforms.py directly by
+    # path to avoid the name clash.
+    vt_path = os.path.join(seine_root, "datasets", "video_transforms.py")
+    spec = importlib.util.spec_from_file_location("seine_video_transforms", vt_path)
+    video_transforms = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(video_transforms)
+
     from diffusion import create_diffusion
     from models import get_models
     from models.clip import TextEmbedder
