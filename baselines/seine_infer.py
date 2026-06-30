@@ -179,7 +179,9 @@ def auto_inpainting(args, masked_video, mask, prompt, vae, text_encoder, diffusi
         samples, _ = samples.chunk(2, dim=0)
 
     video_clip = samples[0].permute(1, 0, 2, 3).contiguous()  # f, 4, lh, lw
-    video_clip = vae.decode(video_clip / 0.18215).sample  # f, 3, H, W in [-1,1]
+
+    latent_input = (video_clip / 0.18215).to(dtype=vae.dtype)
+    video_clip = vae.decode(latent_input).sample  # f, 3, H, W in [-1,1]
     return video_clip
 
 
