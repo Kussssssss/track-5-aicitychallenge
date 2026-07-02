@@ -8,6 +8,12 @@ def main():
     parser.add_argument("--pred_dir", required=True)
     parser.add_argument("--zip_path", required=True)
     parser.add_argument("--compression", choices=["stored", "deflated"], default="deflated")
+    parser.add_argument(
+        "--top_folder",
+        default="",
+        help="Optional top-level folder inside the zip (e.g. 'prediction'). "
+        "Default: sample folders at the zip root.",
+    )
     args = parser.parse_args()
 
     pred_dir = Path(args.pred_dir).resolve()
@@ -21,9 +27,11 @@ def main():
     if not files:
         raise RuntimeError(f"No files found under {pred_dir}")
 
+    top = args.top_folder.strip("/")
     with zipfile.ZipFile(zip_path, "w", compression=compression) as zf:
         for path in files:
-            arcname = path.relative_to(pred_dir).as_posix()
+            rel = path.relative_to(pred_dir).as_posix()
+            arcname = f"{top}/{rel}" if top else rel
             zf.write(path, arcname)
 
     print(f"wrote {zip_path} with {len(files)} files")
